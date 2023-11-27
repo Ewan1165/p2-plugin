@@ -2,7 +2,7 @@
 
 Plugin plugin;
 
-CVar testcmd("testcmd", "", "test cmd");
+CVar testvar("testvar", "", "test var");
 
 bool Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory) {
 	GetModules();
@@ -21,18 +21,12 @@ bool Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServ
 	}
 	RegisterAllCVars();
 
-	log("^^^^^^^^^^^");
+	log("Plugin Loaded");
 
 	return true;
 }
 
-void Plugin::ClientPutInServer(void* pEntity, char const* playername) {
-	CVar cheats("sv_cheats");
-	if (cheats.GetBool()) {
-		log("cheats is on");
-	}
-	log("testcmd = {}", testcmd.GetInt());
-}
+void Plugin::ClientPutInServer(void* pEntity, char const* playername) { }
 
 void Plugin::Unload() { }
 

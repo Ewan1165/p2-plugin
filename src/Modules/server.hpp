@@ -40,18 +40,12 @@ namespace server {
 		return serverTools->CallFunc<bool, void*, const char*, char*, int>(10, false, ent, key, val, maxLen);
 	}
 
-	uintptr_t findByName;
-	uintptr_t gEntList;
-
 	bool Init() {
 		server = new Module("server.dll");
 		if (server->ptr == nullptr) return false;
 
 		serverTools = server->GetInterface("VSERVERTOOLS001");
 		if (serverTools->ptr == nullptr) return false;
-		
-		gEntList = ((uintptr_t)(*reinterpret_cast<void**>(serverTools->ptr[1] + 61))-4);
-		findByName = gEntList + 100367904;
 
 		return true;
 	}

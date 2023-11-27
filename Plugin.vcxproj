@@ -153,9 +153,11 @@
     <ClInclude Include="src\Plugin.hpp" />
     <ClInclude Include="src\sdk.hpp" />
     <ClInclude Include="src\Utils\Mem.hpp" />
+    <ClInclude Include="src\Utils\Platform.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

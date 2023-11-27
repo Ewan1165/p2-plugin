@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include "sdk.hpp"
+#include "Platform.hpp"
 
 #define INRANGE(x, a, b) ((x) >= (a) && (x) <= (b))
 #define getBits(x) (INRANGE(((x) & (~0x20)), 'A', 'F') ? (((x) & (~0x20)) - 'A' + 0xA) : (INRANGE(x, '0', '9') ? x - '0' : 0))
@@ -23,8 +24,8 @@ public:
 
 	template <typename Ret, typename... Args>
 	Ret CallFunc(int index, bool usecdecl = false, Args... args) {
-		using cDecl = Ret(__cdecl*)(void*, Args...);
-		using thisCall = Ret(__thiscall*)(void*, Args...);
+		using cDecl = Ret(cdecl*)(void*, Args...);
+		using thisCall = Ret(thiscall*)(void*, Args...);
 
 		if (usecdecl) {
 			return reinterpret_cast<cDecl>(ptr[index])(reinterpret_cast<void*>(base), args...);

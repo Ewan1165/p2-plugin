@@ -8,7 +8,7 @@ namespace tier1 {
 
 	Interface* cvar;
 
-	using Create_ = int(__thiscall*)(ConVar*, const char*, const char*, int, const char*, bool, float, bool, float, FnChangeCallback_t);
+	using Create_ = int(thiscall*)(ConVar*, const char*, const char*, int, const char*, bool, float, bool, float, FnChangeCallback_t);
 	Create_ Create;
 
 	void* ConVar_VTable = nullptr;
