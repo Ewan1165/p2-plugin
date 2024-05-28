@@ -19,6 +19,10 @@ bool Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServ
 		log("Server.dll couldnt load");
 		return false;
 	}
+	if (!vgui::Init()) {
+		log("vgui couldnt load");
+		return false;
+	}
 	RegisterAllCVars();
 
 	log("Plugin Loaded");
@@ -26,7 +30,9 @@ bool Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServ
 	return true;
 }
 
-void Plugin::ClientPutInServer(void* pEntity, char const* playername) { }
+void Plugin::ClientPutInServer(void* pEntity, char const* playername) {
+	server::SetKeyValueChar(server::FirstEnt(), "targetname", "testlol");
+}
 
 void Plugin::Unload() { }
 

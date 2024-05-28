@@ -16,10 +16,26 @@ class Interface {
 public:
 	uintptr_t** base;
 	uintptr_t* ptr;
+	std::unique_ptr<uintptr_t[]> copy;
 
-	Interface(void* base) {
+	int size = 0;
+
+	bool hook;
+
+	Interface(void* base, bool hook = false) : hook(hook) {
 		this->base = reinterpret_cast<uintptr_t**>(base);
 		this->ptr = *this->base;
+
+		while (this->ptr[this->size]) {
+			++this->size;
+		}
+
+		if (hook) {
+			copy = std::make_unique<uintptr_t[]>(this->size + 1);
+			std::memcpy(this->copy.get(), this->ptr - 1, sizeof(uintptr_t) + this->size * sizeof(uintptr_t));
+
+			*this->base = this->copy.get() + 1;
+		}
 	}
 
 	template <typename Ret, typename... Args>
@@ -31,6 +47,15 @@ public:
 			return reinterpret_cast<cDecl>(ptr[index])(reinterpret_cast<void*>(base), args...);
 		}
 		return reinterpret_cast<thisCall>(ptr[index])(reinterpret_cast<void*>(base), args...);
+	}
+
+	template <typename T = uintptr_t, typename U = void*>
+		bool Hook(T detour, int index) {
+		if (index >= 0 && index < this->size) {
+			this->copy[index] = reinterpret_cast<uintptr_t>(detour);
+			return true;
+		}
+		return false;
 	}
 };
 
@@ -89,40 +114,7 @@ public:
 		return reinterpret_cast<T>(GetProcAddress(ptr, name));
 	}
 
-	template <typename T = uintptr_t>
-	T Scan(const char* target, int offset = 0) {
-		uintptr_t res;
-
-		const char* pattern = target;
-		uintptr_t result = 0;
-
-		for (auto position = info.start; position < info.start+info.size; ++position) {
-			if (!*pattern)
-				res = result;
-
-			if (*pattern == '?' || *(uint8_t*)position == getByte(pattern)) {
-				if (!result)
-					result = position;
-
-				if (!pattern[1] || !pattern[2])
-					res = result;
-
-				pattern += (*pattern == '\?') ? 2 : 3;
-			}
-			else {
-				pattern = target;
-				result = 0;
-			}
-		}
-
-		if (result) {
-			result += offset;
-		}
-
-		return result;
-	}
-
-	Interface* GetInterface(const char* name) {
+	Interface* GetInterface(const char* name, bool hook = false) {
 		void* CreateInterfacePtr = this->GetSymbol("CreateInterface");
 
 		auto CreateInterface = reinterpret_cast<CreateInterfaceFn>(CreateInterfacePtr);
@@ -130,6 +122,6 @@ public:
 		int ret;
 		void* InterfacePtr = CreateInterface(name, &ret);
 
-		return new Interface(InterfacePtr);
+		return new Interface(InterfacePtr, hook);
 	}
 };

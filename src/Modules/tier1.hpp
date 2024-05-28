@@ -20,13 +20,17 @@ namespace tier1 {
 
 	void RegisterConCommand(ConCommandBase* ptr) {
 		cvar->CallFunc<void, ConCommandBase*>(9, false, ptr);
-	}	
+	}
+
+	void __fastcall RegisterConCommand_Hook(void* thisptr, ConCommandBase* ptr) {
+		log("hi");
+	}
 
 	bool Init() {
 		tier1 = new Module("vstdlib.dll");
 		if (!tier1->ptr) return false;
 
-		cvar = tier1->GetInterface("VEngineCvar007");
+		cvar = tier1->GetInterface("VEngineCvar007", true);
 		if (!cvar->base) return false;
 
 		ConVar* sv_lan = reinterpret_cast<ConVar*>(FindCommandBase("sv_lan"));
@@ -34,6 +38,8 @@ namespace tier1 {
 		ConVar_VTable2 = sv_lan->ConVar_VTable;
 
 		Create = reinterpret_cast<Create_>((*((void***)&ConVar_VTable2))[27]);
+
+		cvar->Hook(RegisterConCommand_Hook, 9);
 
 		return true;
 	}

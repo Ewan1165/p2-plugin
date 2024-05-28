@@ -150,6 +150,7 @@
     <ClInclude Include="src\Modules\server.hpp" />
     <ClInclude Include="src\Modules\tier0.hpp" />
     <ClInclude Include="src\Modules\tier1.hpp" />
+    <ClInclude Include="src\Modules\VGui.hpp" />
     <ClInclude Include="src\Plugin.hpp" />
     <ClInclude Include="src\sdk.hpp" />
     <ClInclude Include="src\Utils\Mem.hpp" />

@@ -6,6 +6,7 @@
 #include "Modules/engine.hpp"
 #include "Modules/server.hpp"
 #include "Modules/tier1.hpp"
+#include "Modules/VGui.hpp"
 #include "Entity.hpp"
 #include "CVar.hpp"
 
