@@ -50,9 +50,10 @@ public:
 	}
 
 	template <typename T = uintptr_t, typename U = void*>
-		bool Hook(T detour, int index) {
+		bool Hook(T detour, U &original, int index) {
 		if (index >= 0 && index < this->size) {
 			this->copy[index] = reinterpret_cast<uintptr_t>(detour);
+			original = (U)this->ptr[index];
 			return true;
 		}
 		return false;

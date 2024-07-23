@@ -89,7 +89,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "E:\code\plugins\Plugin\Debug\Plugin.dll" "C:\Program Files (x86)\Steam\steamapps\common\Portal 2\portal2"</Command>
+      <Command>copy /Y "E:\code\plugins\Plugin\Debug\Plugin.dll" "F:\p2-common"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -121,7 +121,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "E:\code\plugins\Plugin\Debug\Plugin.dll" "C:\Program Files (x86)\Steam\steamapps\common\Portal 2\portal2"</Command>
+      <Command>copy /Y "E:\code\plugins\Plugin\Debug\Plugin.dll" "F:\p2-common"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -19,7 +19,8 @@ namespace vgui {
 	Paint_ Paint;
 	int __fastcall Paint_Hook(void* thisptr, PaintMode_t mode) {
 		log("ass");
-		return Paint(thisptr, mode);
+		//return Paint(thisptr, mode);
+		return 0;
 	}
 
 	bool Init() {
@@ -31,7 +32,7 @@ namespace vgui {
 		vguiSurface = vguimatsurface->GetInterface("VGUI_Surface031");
 		vguiScheme = vguischeme->GetInterface("VGUI_Scheme010");
 
-		//engineVgui->Hook<int(__fastcall*)(void*, PaintMode_t), Paint_>(Paint_Hook, Paint, 14);
+		engineVgui->Hook<int(__fastcall*)(void*, PaintMode_t), Paint_>(&Paint_Hook, Paint, 14);
 
 		return true;
 	}

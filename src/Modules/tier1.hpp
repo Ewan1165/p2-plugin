@@ -39,7 +39,7 @@ namespace tier1 {
 
 		Create = reinterpret_cast<Create_>((*((void***)&ConVar_VTable2))[27]);
 
-		cvar->Hook(RegisterConCommand_Hook, 9);
+		//cvar->Hook(RegisterConCommand_Hook, 9);
 
 		return true;
 	}
