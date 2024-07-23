@@ -31,7 +31,10 @@ bool Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServ
 }
 
 void Plugin::ClientPutInServer(void* pEntity, char const* playername) {
-	server::SetKeyValueChar(server::FirstEnt(), "targetname", "testlol");
+	engine::ExecuteCmd("sv_cheats 1");
+
+	Entity first = Entity::First();
+	first.SetKeyval("targetname", "testingvro");
 }
 
 void Plugin::Unload() { }

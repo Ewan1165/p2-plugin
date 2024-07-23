@@ -7,37 +7,49 @@ namespace server {
 	Module* server = nullptr;
 	Interface* serverTools = nullptr;
 
-	void* FirstEnt() {
-		return serverTools->CallFunc<void*>(7, false);
+	void* (__thiscall* zFirstEnt)(void* thisPtr);
+	void* FirstEnt() {//7
+		return zFirstEnt(serverTools->ThisPtr());
 	}
 
-	void* NextEnt(void* prev) {
-		return serverTools->CallFunc<void*, void*>(8, false, prev);
+	void* (__thiscall* zNextEnt)(void* thisPtr, void* prev);
+	void* NextEnt(void* prev) {//8
+		return zNextEnt(serverTools->ThisPtr(), prev);
 	}
 
-	void* EntByHammerId(int id) {
-		return serverTools->CallFunc<void*, int>(9, false, id);
+	void* (__thiscall* zEntByHammerId)(void* thisPtr, int id);
+	void* EntByHammerId(int id) {//9
+		return zEntByHammerId(serverTools->ThisPtr(), id);
 	}
 
-	void* CreateEntByName(const char* name) {
-		return serverTools->CallFunc<void*, const char*>(14, false, name);
-	}
-	void DispatchSpawn(void* ent) {
-		serverTools->CallFunc<void, void*>(15, false, ent);
+	void* (__thiscall* zCreateEntByName)(void* thisPtr, const char* name);
+	void* CreateEntByName(const char* name) {//14
+		return zCreateEntByName(serverTools->ThisPtr(), name);
 	}
 
-	bool SetKeyValueChar(void* ent, const char* key, const char* val) {
-		return serverTools->CallFunc<bool, void*, const char*, const char*>(13, false, ent, key, val);
-	}
-	bool SetKeyValueFloat(void* ent, const char* key, float val) {
-		return serverTools->CallFunc<bool, void*, const char*, float>(12, false, ent, key, val);
-	}
-	bool SetKeyValueVector(void* ent, const char* key, Vector val) {
-		return serverTools->CallFunc<bool, void*, const char*, Vector&>(11, false, ent, key, val);
+	void(__thiscall* zDispatchSpawn)(void* thisPtr, void* ent);
+	void DispatchSpawn(void* ent) {//15
+		zDispatchSpawn(serverTools->ThisPtr(), ent);
 	}
 
-	bool GetKeyValue(void* ent, const char* key, char* val, int maxLen) {
-		return serverTools->CallFunc<bool, void*, const char*, char*, int>(10, false, ent, key, val, maxLen);
+	bool(__thiscall* zSetKeyValueChar)(void* thisPtr, void* ent, const char* key, const char* val);
+	bool SetKeyValueChar(void* ent, const char* key, const char* val) {//13
+		return zSetKeyValueChar(serverTools->ThisPtr(), ent, key, val);
+	}
+
+	bool(__thiscall* zSetKeyValueFloat)(void* thisPtr, void* ent, const char* key, float val);
+	bool SetKeyValueFloat(void* ent, const char* key, float val) {//12
+		return zSetKeyValueFloat(serverTools->ThisPtr(), ent, key, val);
+	}
+
+	bool(__thiscall* zSetKeyValueVector)(void* thisPtr, void* ent, const char* key, Vector& val);
+	bool SetKeyValueVector(void* ent, const char* key, Vector val) {//11
+		return zSetKeyValueVector(serverTools->ThisPtr(), ent, key, val);
+	}
+
+	bool(__thiscall* zGetKeyValue)(void* thisPtr, void* ent, const char* key, char* val, int maxLen);
+	bool GetKeyValue(void* ent, const char* key, char* val, int maxLen) {//10
+		return zGetKeyValue(serverTools->ThisPtr(), ent, key, val, maxLen);
 	}
 
 	bool Init() {
@@ -46,6 +58,16 @@ namespace server {
 
 		serverTools = server->GetInterface("VSERVERTOOLS001");
 		if (serverTools->ptr == nullptr) return false;
+
+		serverTools->GetFunc(7, &zFirstEnt);
+		serverTools->GetFunc(8, &zNextEnt);
+		serverTools->GetFunc(9, &zEntByHammerId);
+		serverTools->GetFunc(14, &zCreateEntByName);
+		serverTools->GetFunc(15, &zDispatchSpawn);
+		serverTools->GetFunc(13, &zSetKeyValueChar);
+		serverTools->GetFunc(12, &zSetKeyValueFloat);
+		serverTools->GetFunc(11, &zSetKeyValueVector);
+		serverTools->GetFunc(10, &zGetKeyValue);
 
 		return true;
 	}

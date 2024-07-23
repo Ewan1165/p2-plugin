@@ -32,7 +32,7 @@ namespace vgui {
 		vguiSurface = vguimatsurface->GetInterface("VGUI_Surface031");
 		vguiScheme = vguischeme->GetInterface("VGUI_Scheme010");
 
-		engineVgui->Hook<int(__fastcall*)(void*, PaintMode_t), Paint_>(&Paint_Hook, Paint, 14);
+		//engineVgui->Hook<int(__fastcall*)(void*, PaintMode_t), Paint_>(&Paint_Hook, Paint, 14);
 
 		return true;
 	}

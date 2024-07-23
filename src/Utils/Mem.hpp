@@ -38,25 +38,12 @@ public:
 		}
 	}
 
-	template <typename Ret, typename... Args>
-	Ret CallFunc(int index, bool usecdecl = false, Args... args) {
-		using cDecl = Ret(cdecl*)(void*, Args...);
-		using thisCall = Ret(thiscall*)(void*, Args...);
-
-		if (usecdecl) {
-			return reinterpret_cast<cDecl>(ptr[index])(reinterpret_cast<void*>(base), args...);
-		}
-		return reinterpret_cast<thisCall>(ptr[index])(reinterpret_cast<void*>(base), args...);
+	void* ThisPtr() {
+		return reinterpret_cast<void*>(base);
 	}
 
-	template <typename T = uintptr_t, typename U = void*>
-		bool Hook(T detour, U &original, int index) {
-		if (index >= 0 && index < this->size) {
-			this->copy[index] = reinterpret_cast<uintptr_t>(detour);
-			original = (U)this->ptr[index];
-			return true;
-		}
-		return false;
+	void GetFunc(int index, void* loc) {
+		*reinterpret_cast<uintptr_t*>(loc) = ptr[index];
 	}
 };
 

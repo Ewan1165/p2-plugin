@@ -9,13 +9,11 @@
 namespace engine {
 	Module* engine;
 	Interface* engineClient;
-		
-	int ExecuteCmd(const char* cmd) {
-		return engineClient->CallFunc<int, const char*>(104, false, cmd);
-	}
+	
+	int(__thiscall * zClientCmd)(void* thisptr, const char* cmdString);
 
-	void GetViewAngles(QAngle ang) {
-		engineClient->CallFunc<int, QAngle&>(18, false, ang);
+	int ExecuteCmd(const char* cmd) {
+		return zClientCmd(engineClient->ThisPtr(), cmd);
 	}
 
 	bool Init() {
@@ -24,6 +22,8 @@ namespace engine {
 
 		engineClient = engine->GetInterface("VEngineClient015");
 		if (engineClient->ptr == nullptr) return false;
+
+		engineClient->GetFunc(104, &zClientCmd);
 
 		return true;
 	}

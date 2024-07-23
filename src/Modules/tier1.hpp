@@ -8,22 +8,20 @@ namespace tier1 {
 
 	Interface* cvar;
 
-	using Create_ = int(thiscall*)(ConVar*, const char*, const char*, int, const char*, bool, float, bool, float, FnChangeCallback_t);
+	using Create_ = int(__thiscall*)(ConVar*, const char*, const char*, int, const char*, bool, float, bool, float, FnChangeCallback_t);
 	Create_ Create;
 
 	void* ConVar_VTable = nullptr;
 	void* ConVar_VTable2 = nullptr;
 
-	ConCommandBase* FindCommandBase(const char* name) {
-		return cvar->CallFunc<ConCommandBase*, const char*>(13, false, name);
+	ConCommandBase* (__thiscall* zFindCommandBase)(void* thisptr, const char* name);
+	ConCommandBase* FindCommandBase(const char* name) {//13
+		return zFindCommandBase(cvar->ThisPtr(), name);
 	}
 
-	void RegisterConCommand(ConCommandBase* ptr) {
-		cvar->CallFunc<void, ConCommandBase*>(9, false, ptr);
-	}
-
-	void __fastcall RegisterConCommand_Hook(void* thisptr, ConCommandBase* ptr) {
-		log("hi");
+	void(__thiscall* zRegisterConCommand)(void* thisptr, ConCommandBase* ptr);
+	void RegisterConCommand(ConCommandBase* ptr) {//9
+		zRegisterConCommand(cvar->ThisPtr(), ptr);
 	}
 
 	bool Init() {
@@ -33,13 +31,14 @@ namespace tier1 {
 		cvar = tier1->GetInterface("VEngineCvar007", true);
 		if (!cvar->base) return false;
 
+		cvar->GetFunc(13, &zFindCommandBase);
+		cvar->GetFunc(9, &zRegisterConCommand);
+
 		ConVar* sv_lan = reinterpret_cast<ConVar*>(FindCommandBase("sv_lan"));
 		ConVar_VTable = *(void**)sv_lan;
 		ConVar_VTable2 = sv_lan->ConVar_VTable;
 
 		Create = reinterpret_cast<Create_>((*((void***)&ConVar_VTable2))[27]);
-
-		//cvar->Hook(RegisterConCommand_Hook, 9);
 
 		return true;
 	}
