@@ -8,33 +8,40 @@ bool Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServ
 	GetModules();
 	if (!tier0::Init()) return false;
 	if (!tier1::Init()) {
-		log("vstdlib.dll Couldnt Load");
+		log("vstdlib.dll Couldnt Load\n");
 		return false;
 	}
 	if (!engine::Init()) {
-		log("Engine.dll Couldnt Load");
+		log("Engine.dll Couldnt Load\n");
 		return false;
 	}
 	if (!server::Init()) {
-		log("Server.dll couldnt load");
+		log("Server.dll couldnt load\n");
 		return false;
 	}
 	if (!vgui::Init()) {
-		log("vgui couldnt load");
+		log("vgui couldnt load\n");
 		return false;
 	}
 	RegisterAllCVars();
 
-	log("Plugin Loaded");
+	log("Plugin Loaded\n");
 
 	return true;
 }
 
 void Plugin::ClientPutInServer(void* pEntity, char const* playername) {
 	engine::ExecuteCmd("sv_cheats 1");
+	
+	std::vector<Entity> cubes = Entity::GetAllByKeyValue("classname", "prop_weighted_cube");
 
-	Entity first = Entity::First();
-	first.SetKeyval("targetname", "testingvro");
+	const char* mapname = engine::GetCurrentMap();
+
+	log("The current map is ");
+	log(mapname);
+	log("\n");
+
+	Entity cube = Entity::CreateByClassname("prop_weighted_cube", "testcube11", Vector(7760, -5443, 125));
 }
 
 void Plugin::Unload() { }
@@ -65,7 +72,7 @@ void Plugin::OnEdictFreed(const void* edict) { }
 
 
 extern "C" __declspec(dllexport) void* CreateInterface(const char* name, int* ret) {
-	if (!strcmp(INTERFACEVERSION_ISERVERPLUGINCALLBACKS, name)) {
+	if (!strcmp("ISERVERPLUGINCALLBACKS003", name)) {
 		if (ret) *ret = 0;
 		return &plugin;
 	}

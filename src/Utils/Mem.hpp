@@ -45,6 +45,11 @@ public:
 	void GetFunc(int index, void* loc) {
 		*reinterpret_cast<uintptr_t*>(loc) = ptr[index];
 	}
+
+	void HookFunc(int index, void* detour, void* original) {
+		//this->copy[index + 1] = reinterpret_cast<uintptr_t>(detour);
+		*reinterpret_cast<uintptr_t*>(original) = this->ptr[index];
+	}
 };
 
 struct ModuleA {

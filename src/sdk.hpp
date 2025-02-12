@@ -3,8 +3,6 @@
 typedef void* (*CreateInterfaceFn)(const char* pName, int* pReturnCode);
 typedef void* (*InstantiateInterfaceFn)();
 
-#define INTERFACEVERSION_ISERVERPLUGINCALLBACKS "ISERVERPLUGINCALLBACKS003"
-
 class IServerPluginCallbacks {
 public:
 	virtual bool Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory) = 0;
@@ -194,3 +192,16 @@ struct ConCommand : ConCommandBase {
 		, m_bUsingCommandCallbackInterface(false) {
 	}
 };
+
+typedef struct player_info_s
+{
+	char name[128];
+	int userID; // local server user ID, unique while server is running <- THIS IS NOT STEAMID
+	char guid[33]; // that is Steamid
+	unsigned int friendsid;
+	char friendsname[128];
+	bool fakeplayer; // true, if player is a bot controlled by game.dll
+	bool ishltv;
+	unsigned int customfiles[4]; // custom files CRC for this player
+	unsigned char filesdownloaded; // this counter increases each time the server downloaded a new file
+} player_info_t;

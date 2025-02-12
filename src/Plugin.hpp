@@ -12,6 +12,8 @@
 
 #include <string.h>
 #include <Windows.h>
+#include <cstdlib>
+#include <Vector>
 
 class Plugin : public IServerPluginCallbacks {
 public:

@@ -31,6 +31,40 @@ public:
 		return Entity(server::EntByHammerId(id));
 	}
 
+	static Entity CreateByClassname(const char* classname, const char* targetname, Vector origin = Vector(0, 0, 0), const char* model = "") {
+		Entity ent(server::CreateEntByName(classname));
+		ent.SetKeyval("origin", origin);
+		ent.SetKeyval("targetname", targetname);
+		server::DispatchSpawn(ent.base);
+		if (model != "") {
+			ent.SetKeyval("model", model);
+		}
+		return ent;
+	}
+
+	static std::vector<Entity> GetAllByKeyValue(const char* key, const char* value) {
+		std::vector<Entity> vec;
+		Entity ent = Entity::First();
+		char* currKeyVal = reinterpret_cast<char*>(malloc(sizeof(char)*128));
+		while (ent.base) {
+			server::GetKeyValue(ent.base, key, currKeyVal, 128);
+			if (!strcmp(currKeyVal, value)) {
+				vec.push_back(ent);
+			}
+			ent = Entity::NextEnt(ent);
+		}
+		return vec;
+	}
+
+	char* GetKeyVal(const char* key) {
+		char* buff = reinterpret_cast<char*>(malloc(sizeof(char)*128));
+
+		if (server::GetKeyValue(this->base, key, buff, 128)) {
+			return buff;
+		}
+		return nullptr;
+	}
+
 	bool SetKeyval(const char* key, const char* val) {
 		return server::SetKeyValueChar(base, key, val);
 	}
